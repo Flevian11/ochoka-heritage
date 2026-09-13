@@ -1,0 +1,6 @@
+Ochoka Heritage mobile refinement patch
+
+- Mobile showcase carousel now places its title/content directly over the image with a readable gradient/backdrop.
+- Desktop carousel keeps the clean image/text split layout.
+- About section photo is hidden below the lg breakpoint on mobile/tablet; the textual content remains clean and full width.
+- Existing remote image/media approach and artistic Sora/Manrope typography are preserved.
