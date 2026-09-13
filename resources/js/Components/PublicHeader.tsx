@@ -4,10 +4,11 @@ import { useState } from 'react';
 
 const navigation = [
     { label: 'Home', href: '/' },
-    { label: 'About', href: '/#about' },
-    { label: 'Community', href: '/#community' },
-    { label: 'Governance', href: '/#governance' },
-    { label: 'Contact', href: '/#contact' },
+    { label: 'About', href: '/about' },
+    { label: 'Membership', href: '/membership' },
+    { label: 'Welfare', href: '/welfare' },
+    { label: 'Governance', href: '/governance' },
+    { label: 'Contact', href: '/contact' },
 ];
 
 export default function PublicHeader() {
@@ -43,7 +44,7 @@ export default function PublicHeader() {
                         <Link href="/login" className="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-xs font-extrabold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50">
                             Member Login
                         </Link>
-                        <a href="/#community" className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-emerald-500 px-4 py-2.5 text-xs font-extrabold text-white shadow-sm shadow-emerald-500/20 transition hover:-translate-y-0.5 hover:bg-emerald-600">
+                        <a href="/membership" className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-emerald-500 px-4 py-2.5 text-xs font-extrabold text-white shadow-sm shadow-emerald-500/20 transition hover:-translate-y-0.5 hover:bg-emerald-600">
                             Get Started <ArrowRight size={13} />
                         </a>
                     </div>
@@ -66,7 +67,7 @@ export default function PublicHeader() {
                             <Link href="/login" onClick={() => setOpen(false)} className="inline-flex items-center justify-center rounded-xl border border-slate-200 px-4 py-3 text-sm font-bold text-slate-700">
                                 Member Login
                             </Link>
-                            <a href="/#community" onClick={() => setOpen(false)} className="inline-flex items-center justify-center rounded-xl bg-emerald-500 px-4 py-3 text-sm font-bold text-white">
+                            <a href="/membership" onClick={() => setOpen(false)} className="inline-flex items-center justify-center rounded-xl bg-emerald-500 px-4 py-3 text-sm font-bold text-white">
                                 Get Started
                             </a>
                         </div>

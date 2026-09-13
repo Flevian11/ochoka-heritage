@@ -1,11 +1,14 @@
 import { Link } from '@inertiajs/react';
-import { ArrowUpRight, BookOpen, Compass, FileText, Mail, ShieldCheck, Users, HeartHandshake, Landmark } from 'lucide-react';
+import { ArrowUpRight, BookOpen, Compass, FileText, Mail, ShieldCheck, Users, HeartHandshake, Landmark, UserRound, HelpCircle } from 'lucide-react';
 
 const explore = [
-    ['About', '/#about', Compass],
-    ['Community', '/#community', Users],
-    ['Governance', '/#governance', Landmark],
-    ['Contact', '/#contact', Mail],
+    ['About', '/about', Compass],
+    ['Membership', '/membership', Users],
+    ['Welfare', '/welfare', HeartHandshake],
+    ['Governance', '/governance', Landmark],
+    ['Leadership', '/leadership', UserRound],
+    ['FAQ', '/faq', HelpCircle],
+    ['Contact', '/contact', Mail],
 ] as const;
 
 const legal = [
