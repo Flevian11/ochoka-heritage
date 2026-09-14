@@ -5,26 +5,29 @@ namespace App\Services;
 use App\Models\Member;
 use App\Models\WelfareCase;
 use App\Models\WelfareContribution;
+use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
 
 class WelfareContributionService
 {
     public function create(array $attributes): WelfareContribution
     {
-        $case = WelfareCase::query()->findOrFail($attributes['welfare_case_id']);
+        $welfareCase = WelfareCase::query()->findOrFail($attributes['welfare_case_id']);
         $member = Member::query()->findOrFail($attributes['member_id']);
-        $organizationId = (int) ($attributes['organization_id'] ?? $case->organization_id);
 
-        if ((int) $case->organization_id !== $organizationId) {
-            throw new InvalidArgumentException('Welfare case and contribution must belong to the same organization.');
+        $organizationId = (int) ($attributes['organization_id'] ?? $welfareCase->organization_id);
+
+        if ((int) $welfareCase->organization_id !== $organizationId) {
+            throw new InvalidArgumentException('The welfare case must belong to the selected organization.');
         }
 
         if ((int) $member->organization_id !== $organizationId) {
-            throw new InvalidArgumentException('Welfare member and contribution must belong to the same organization.');
+            throw new InvalidArgumentException('The member must belong to the same organization as the welfare case.');
         }
 
-        $attributes['organization_id'] = $organizationId;
-
-        return WelfareContribution::query()->create($attributes);
+        return DB::transaction(fn () => WelfareContribution::query()->create([
+            ...$attributes,
+            'organization_id' => $organizationId,
+        ]));
     }
 }

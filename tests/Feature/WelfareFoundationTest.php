@@ -113,10 +113,18 @@ class WelfareFoundationTest extends TestCase
         $member = Member::factory()->for($otherOrganization)->create();
 
         $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The member must belong to the same organization as the welfare case.');
+
         app(WelfareContributionService::class)->create([
             'organization_id' => $organization->id,
             'welfare_case_id' => $case->id,
             'member_id' => $member->id,
+            'amount' => 200,
+            'source_type' => WelfareContribution::SOURCE_INDEPENDENT_PAYMENT,
+            'payment_method' => 'cash',
+            'reference' => 'WEL-ORG-MISMATCH',
+            'paid_on' => now()->toDateString(),
+            'status' => WelfareContribution::STATUS_PENDING,
         ]);
     }
 }
