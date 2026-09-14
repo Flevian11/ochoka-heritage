@@ -16,6 +16,13 @@ return [
 
     'default' => env('MAIL_MAILER', 'log'),
 
+    'email_subject_prefix' => env('EMAIL_SUBJECT_PREFIX', ''),
+
+    'reply_to' => [
+        'address' => env('MAIL_REPLY_TO_ADDRESS'),
+        'name' => env('MAIL_REPLY_TO_NAME'),
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Mailer Configurations
@@ -40,6 +47,7 @@ return [
         'smtp' => [
             'transport' => 'smtp',
             'scheme' => env('MAIL_SCHEME'),
+            'encryption' => env('MAIL_ENCRYPTION'),
             'url' => env('MAIL_URL'),
             'host' => env('MAIL_HOST', '127.0.0.1'),
             'port' => env('MAIL_PORT', 2525),

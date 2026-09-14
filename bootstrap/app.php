@@ -18,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'permission' => \App\Http\Middleware\EnsurePermission::class,
+            'verified.contact' => \App\Http\Middleware\EnsureVerifiedContact::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

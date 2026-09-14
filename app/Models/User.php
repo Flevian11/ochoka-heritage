@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'password', 'status', 'last_login_at'])]
+#[Fillable(['name', 'email', 'phone', 'password', 'status', 'last_login_at'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -28,6 +28,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return [
             'email_verified_at' => 'datetime',
             'last_login_at' => 'datetime',
+            'phone_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
     }
@@ -35,6 +36,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function member(): HasOne
     {
         return $this->hasOne(Member::class);
+    }
+
+    public function otpChallenges(): HasMany
+    {
+        return $this->hasMany(OtpChallenge::class);
     }
 
     public function identities(): HasMany
@@ -77,5 +83,15 @@ class User extends Authenticatable implements MustVerifyEmail
     public function isEmailVerified(): bool
     {
         return $this->email_verified_at !== null;
+    }
+
+    public function isPhoneVerified(): bool
+    {
+        return $this->phone_verified_at !== null;
+    }
+
+    public function hasVerifiedContact(): bool
+    {
+        return $this->isEmailVerified() || $this->isPhoneVerified();
     }
 }
