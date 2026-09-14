@@ -25,10 +25,7 @@ class User extends Authenticatable
         ];
     }
 
-    public function member(): HasOne
-    {
-        return $this->hasOne(Member::class);
-    }
+    public function member(): HasOne { return $this->hasOne(Member::class); }
 
     public function roles(): BelongsToMany
     {
@@ -39,12 +36,20 @@ class User extends Authenticatable
 
     public function activeRoles(): BelongsToMany
     {
-        return $this->roles()->wherePivotNull('revoked_at');
+        return $this->roles()
+            ->wherePivotNull('revoked_at')
+            ->where('roles.is_active', true);
     }
 
     public function hasPermission(string $permission): bool
     {
+        $organizationId = $this->member?->organization_id;
+        if (! $organizationId) {
+            return false;
+        }
+
         return $this->activeRoles()
+            ->where('roles.organization_id', $organizationId)
             ->whereHas('permissions', fn ($query) => $query->where('key', $permission))
             ->exists();
     }

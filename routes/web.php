@@ -2,6 +2,9 @@
 
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\MemberController;
+use App\Http\Controllers\Admin\ExecutivePositionController;
+use App\Http\Controllers\Admin\ExecutiveAppointmentController;
+use App\Http\Controllers\Admin\SystemSettingController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -41,5 +44,29 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         Route::post('/members', [MemberController::class, 'store'])->name('members.store');
         Route::put('/members/{member}', [MemberController::class, 'update'])->name('members.update');
         Route::delete('/members/{member}', [MemberController::class, 'destroy'])->name('members.destroy');
+    });
+
+    Route::prefix('governance')->name('governance.')->middleware('permission:governance.view')->group(function () {
+        Route::get('/positions', [ExecutivePositionController::class, 'index'])->name('positions.index');
+        Route::get('/appointments', [ExecutiveAppointmentController::class, 'index'])->name('appointments.index');
+
+        Route::middleware('permission:governance.manage')->group(function () {
+            Route::get('/positions/create', [ExecutivePositionController::class, 'create'])->name('positions.create');
+            Route::post('/positions', [ExecutivePositionController::class, 'store'])->name('positions.store');
+            Route::get('/positions/{position}/edit', [ExecutivePositionController::class, 'edit'])->name('positions.edit');
+            Route::put('/positions/{position}', [ExecutivePositionController::class, 'update'])->name('positions.update');
+            Route::delete('/positions/{position}', [ExecutivePositionController::class, 'destroy'])->name('positions.destroy');
+
+            Route::get('/appointments/create', [ExecutiveAppointmentController::class, 'create'])->name('appointments.create');
+            Route::post('/appointments', [ExecutiveAppointmentController::class, 'store'])->name('appointments.store');
+            Route::post('/appointments/{appointment}/revoke', [ExecutiveAppointmentController::class, 'revoke'])->name('appointments.revoke');
+        });
+    });
+
+    Route::prefix('settings')->name('settings.')->middleware('permission:system.manage')->group(function () {
+        Route::get('/', [SystemSettingController::class, 'index'])->name('index');
+        Route::post('/', [SystemSettingController::class, 'store'])->name('store');
+        Route::put('/{setting}', [SystemSettingController::class, 'update'])->name('update');
+        Route::delete('/{setting}', [SystemSettingController::class, 'destroy'])->name('destroy');
     });
 });

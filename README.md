@@ -56,3 +56,8 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## Database
+
+Ochoka Heritage uses PostgreSQL for development, testing, and production. Configure the local environment with `DB_CONNECTION=pgsql`, PostgreSQL on `127.0.0.1:5432`, and the project database `ochoka_heritage`. Keep credentials in `.env`; never commit passwords. PHPUnit is configured to use the same PostgreSQL database because the project explicitly requires PostgreSQL-backed tests.
+

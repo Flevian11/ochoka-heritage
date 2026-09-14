@@ -24,6 +24,10 @@ class AuthorizationGovernanceFoundationTest extends TestCase
         $role->permissions()->attach($permission);
 
         $user = User::factory()->create();
+        Member::factory()->create([
+            'organization_id' => $organization->id,
+            'user_id' => $user->id,
+        ]);
         $user->roles()->attach($role, ['assigned_at' => now()]);
 
         $this->assertTrue($user->hasPermission('members.view'));
@@ -37,6 +41,10 @@ class AuthorizationGovernanceFoundationTest extends TestCase
         $role->permissions()->attach($permission);
 
         $user = User::factory()->create();
+        Member::factory()->create([
+            'organization_id' => $organization->id,
+            'user_id' => $user->id,
+        ]);
         $user->roles()->attach($role, [
             'assigned_at' => now(),
             'revoked_at' => now(),

@@ -1,0 +1,9 @@
+import { Head, Link, useForm } from '@inertiajs/react';
+export default function Create({organization}:{organization:{name:string}}){
+ const f=useForm({name:'',slug:'',description:'',display_order:0,is_active:true});
+ return <><Head title="Add Executive Position"/><main className="min-h-screen bg-slate-50"><div className="mx-auto max-w-3xl px-6 py-8"><Link href="/admin/governance/positions" className="text-sm font-semibold text-emerald-700">← Positions</Link><h1 className="mt-2 text-3xl font-bold">Add Executive Position</h1><p className="text-slate-500">{organization.name}</p><form onSubmit={e=>{e.preventDefault();f.post('/admin/governance/positions')}} className="mt-6 space-y-5 rounded-2xl border bg-white p-6">
+ {['name','slug','display_order'].map(k=><div key={k}><label className="block text-sm font-semibold capitalize">{k.replace('_',' ')}</label><input type={k==='display_order'?'number':'text'} value={(f.data as any)[k]} onChange={e=>f.setData(k as any,k==='display_order'?Number(e.target.value):e.target.value)} className="mt-2 w-full rounded-xl border px-4 py-3"/>{(f.errors as any)[k]&&<p className="text-sm text-red-600">{(f.errors as any)[k]}</p>}</div>)}
+ <div><label className="block text-sm font-semibold">Description</label><textarea value={f.data.description} onChange={e=>f.setData('description',e.target.value)} className="mt-2 w-full rounded-xl border px-4 py-3"/></div>
+ <label className="flex gap-3"><input type="checkbox" checked={f.data.is_active} onChange={e=>f.setData('is_active',e.target.checked)}/> Active</label><button disabled={f.processing} className="rounded-xl bg-emerald-700 px-5 py-3 font-bold text-white">Save position</button>
+ </form></div></main></>
+}

@@ -15,6 +15,8 @@ class AuthorizationSeeder extends Seeder
 
         $permissions = [
             ['key' => 'system.manage', 'name' => 'Manage system', 'group' => 'system'],
+            ['key' => 'governance.view', 'name' => 'View governance', 'group' => 'governance'],
+            ['key' => 'governance.manage', 'name' => 'Manage governance', 'group' => 'governance'],
             ['key' => 'members.view', 'name' => 'View members', 'group' => 'members'],
             ['key' => 'members.manage', 'name' => 'Manage members', 'group' => 'members'],
             ['key' => 'finance.view', 'name' => 'View finances', 'group' => 'finance'],
@@ -43,7 +45,7 @@ class AuthorizationSeeder extends Seeder
                 'name' => 'Chairman',
                 'description' => 'Governance, welfare and organizational oversight.',
                 'permissions' => [
-                    'members.view', 'welfare.view', 'welfare.manage',
+                    'members.view', 'governance.view', 'governance.manage', 'welfare.view', 'welfare.manage',
                     'meetings.view', 'meetings.manage', 'elections.view',
                     'elections.manage', 'reports.view', 'communications.manage',
                 ],
@@ -60,7 +62,7 @@ class AuthorizationSeeder extends Seeder
                 'name' => 'Secretary',
                 'description' => 'Meetings, records and communications.',
                 'permissions' => [
-                    'members.view', 'meetings.view', 'meetings.manage',
+                    'members.view', 'governance.view', 'meetings.view', 'meetings.manage',
                     'communications.manage', 'reports.view',
                 ],
             ],
