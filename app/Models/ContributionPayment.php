@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
+use App\Models\User;
 
 class ContributionPayment extends Model
 {
@@ -22,7 +24,7 @@ class ContributionPayment extends Model
 
     protected $fillable = [
         'organization_id', 'member_id', 'amount', 'received_at', 'method',
-        'reference', 'status', 'notes',
+        'reference', 'status', 'verified_by', 'verified_at', 'reversed_by', 'reversed_at', 'reversal_reason', 'notes',
     ];
 
     protected function casts(): array
@@ -30,12 +32,17 @@ class ContributionPayment extends Model
         return [
             'amount' => 'decimal:2',
             'received_at' => 'datetime',
+            'verified_at' => 'datetime',
+            'reversed_at' => 'datetime',
         ];
     }
 
     public function organization(): BelongsTo { return $this->belongsTo(Organization::class); }
     public function member(): BelongsTo { return $this->belongsTo(Member::class); }
     public function allocations(): HasMany { return $this->hasMany(ContributionPaymentAllocation::class); }
+    public function verifiedBy(): BelongsTo { return $this->belongsTo(User::class, 'verified_by'); }
+    public function reversedBy(): BelongsTo { return $this->belongsTo(User::class, 'reversed_by'); }
+    public function ledgerTransaction(): MorphOne { return $this->morphOne(FinancialTransaction::class, 'source'); }
 
     public function allocatedAmount(): float
     {
