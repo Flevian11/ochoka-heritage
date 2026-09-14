@@ -12,28 +12,14 @@ class Organization extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'name',
-        'slug',
-        'legal_name',
-        'description',
-        'email',
-        'phone',
-        'alternate_phone',
-        'website_url',
-        'address',
-        'city',
-        'county',
-        'country',
-        'currency',
-        'timezone',
-        'is_active',
+        'name', 'slug', 'legal_name', 'description', 'email', 'phone',
+        'alternate_phone', 'website_url', 'address', 'city', 'county',
+        'country', 'currency', 'timezone', 'is_active',
     ];
 
     protected function casts(): array
     {
-        return [
-            'is_active' => 'boolean',
-        ];
+        return ['is_active' => 'boolean'];
     }
 
     public function members(): HasMany
@@ -44,5 +30,20 @@ class Organization extends Model
     public function settings(): HasMany
     {
         return $this->hasMany(SystemSetting::class);
+    }
+
+    public function roles(): HasMany
+    {
+        return $this->hasMany(Role::class);
+    }
+
+    public function executivePositions(): HasMany
+    {
+        return $this->hasMany(ExecutivePosition::class);
+    }
+
+    public function executiveAppointments(): HasMany
+    {
+        return $this->hasMany(ExecutiveAppointment::class);
     }
 }
