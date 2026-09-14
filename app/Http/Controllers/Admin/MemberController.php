@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\AuditLog;
 use App\Models\Member;
 use App\Services\OrganizationContext;
+use App\Services\MemberLifecycleService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -80,16 +81,19 @@ class MemberController extends Controller
             'city' => ['nullable', 'string', 'max:100'],
             'county' => ['nullable', 'string', 'max:100'],
             'joined_at' => ['nullable', 'date'],
-            'status' => ['required', Rule::in([
-                Member::STATUS_PENDING,
-                Member::STATUS_ACTIVE,
-                Member::STATUS_SUSPENDED,
-                Member::STATUS_INACTIVE,
-            ])],
+            'status' => ['required', Rule::in([Member::STATUS_PENDING, Member::STATUS_ACTIVE])],
             'notes' => ['nullable', 'string'],
         ]);
 
         $member = $organization->members()->create($data);
+        $member->statusHistories()->create([
+            'organization_id' => $organization->id,
+            'from_status' => null,
+            'to_status' => $member->status,
+            'reason' => 'Member record created by administrator.',
+            'changed_by' => $request->user()->id,
+            'changed_at' => now(),
+        ]);
 
         $this->audit($request, $organization->id, $member, 'created', null, $member->fresh()->toArray());
 
@@ -133,16 +137,21 @@ class MemberController extends Controller
             'county' => ['nullable', 'string', 'max:100'],
             'joined_at' => ['nullable', 'date'],
             'status' => ['required', Rule::in([
-                Member::STATUS_PENDING,
-                Member::STATUS_ACTIVE,
-                Member::STATUS_SUSPENDED,
-                Member::STATUS_INACTIVE,
+                Member::STATUS_PENDING, Member::STATUS_ACTIVE, Member::STATUS_SUSPENDED,
+                Member::STATUS_INACTIVE, Member::STATUS_DECEASED,
             ])],
+            'status_reason' => ['nullable', 'string', 'max:2000'],
             'notes' => ['nullable', 'string'],
         ]);
 
         $previous = $member->fresh()->toArray();
+        $targetStatus = $data['status'];
+        $statusChanged = $targetStatus !== $member->status;
+        unset($data['status'], $data['status_reason']);
         $member->update($data);
+        if ($statusChanged) {
+            app(MemberLifecycleService::class)->transition($member, $targetStatus, $request->user(), (string) $request->input('status_reason', ''));
+        }
         $this->audit($request, $organization->id, $member, 'updated', $previous, $member->fresh()->toArray());
 
         return redirect()->route('admin.members.index')->with('success', 'Member updated successfully.');

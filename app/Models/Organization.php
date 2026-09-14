@@ -22,6 +22,11 @@ class Organization extends Model
         return ['is_active' => 'boolean'];
     }
 
+    public function membershipApplications(): HasMany
+    {
+        return $this->hasMany(MembershipApplication::class);
+    }
+
     public function members(): HasMany
     {
         return $this->hasMany(Member::class);

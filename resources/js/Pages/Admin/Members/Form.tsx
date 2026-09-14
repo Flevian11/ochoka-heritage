@@ -16,6 +16,7 @@ export type MemberFormData = {
     county: string;
     joined_at: string;
     status: string;
+    status_reason: string;
     notes: string;
 };
 
@@ -67,7 +68,19 @@ export default function MemberForm({
                         <option value="active">Active</option>
                         <option value="suspended">Suspended</option>
                         <option value="inactive">Inactive</option>
+                        <option value="deceased">Deceased</option>
+                        <option value="deceased">Deceased</option>
                     </select>
+                </div>
+                <div>
+                    <label className="block text-sm font-semibold text-slate-700">Status change reason</label>
+                    <textarea value={data.status_reason} onChange={(e) => setData('status_reason', e.target.value)} rows={3} className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3" />
+                    {errors.status_reason && <p className="mt-1 text-sm text-red-600">{errors.status_reason}</p>}
+                </div>
+                <div>
+                    <label className="block text-sm font-semibold text-slate-700">Status change reason</label>
+                    <textarea value={data.status_reason} onChange={(e) => setData('status_reason', e.target.value)} rows={3} className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3" />
+                    {errors.status_reason && <p className="mt-1 text-sm text-red-600">{errors.status_reason}</p>}
                 </div>
                 <div className="md:col-span-2">
                     <label className="block text-sm font-semibold text-slate-700">Notes</label>

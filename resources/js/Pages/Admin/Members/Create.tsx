@@ -18,6 +18,7 @@ export default function Create() {
         county: '',
         joined_at: '',
         status: 'pending',
+        status_reason: '',
         notes: '',
     });
 

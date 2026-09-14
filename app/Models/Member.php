@@ -16,6 +16,7 @@ class Member extends Model
     public const STATUS_ACTIVE = 'active';
     public const STATUS_SUSPENDED = 'suspended';
     public const STATUS_INACTIVE = 'inactive';
+    public const STATUS_DECEASED = 'deceased';
 
     protected $fillable = [
         'organization_id', 'user_id', 'membership_number', 'first_name',
@@ -40,6 +41,11 @@ class Member extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function statusHistories(): HasMany
+    {
+        return $this->hasMany(MemberStatusHistory::class)->orderByDesc('changed_at');
     }
 
     public function executiveAppointments(): HasMany

@@ -1,0 +1,12 @@
+import { FormEvent } from 'react';
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
+
+type PageProps = { flash?: { success?: string } };
+
+export default function Apply() {
+ const { flash } = usePage<PageProps>().props;
+ const form=useForm({first_name:'',middle_name:'',last_name:'',phone:'',alternate_phone:'',email:'',date_of_birth:'',national_id:'',address:'',city:'',county:'',eligibility_answers:{}});
+ const submit=(e:FormEvent)=>{e.preventDefault();form.post('/membership/apply');};
+ const field=(key:keyof typeof form.data,label:string,type='text',required=false)=><div><label className="block text-sm font-semibold text-slate-700">{label}{required?' *':''}</label><input type={type} value={form.data[key] as string} onChange={e=>form.setData(key,e.target.value as never)} className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3" />{form.errors[key]&&<p className="mt-1 text-sm text-red-600">{form.errors[key]}</p>}</div>;
+ return <><Head title="Membership application"/><main className="min-h-screen bg-slate-50"><div className="mx-auto max-w-4xl px-6 py-10"><Link href="/membership" className="text-sm font-semibold text-emerald-700">← Membership</Link><div className="mt-4 rounded-2xl border border-slate-200 bg-white p-7 shadow-sm"><h1 className="text-3xl font-bold text-slate-900">Apply for membership</h1><p className="mt-2 text-slate-600">Submit your details for review. Approval creates your association membership; an online account is not required.</p>{flash?.success&&<div className="mt-5 rounded-xl bg-emerald-50 p-4 text-emerald-800">{flash.success}</div>}<form onSubmit={submit} className="mt-7 grid gap-5 md:grid-cols-2">{field('first_name','First name','text',true)}{field('middle_name','Middle name')}{field('last_name','Last name','text',true)}{field('phone','Phone','text',true)}{field('alternate_phone','Alternate phone')}{field('email','Email','email',true)}{field('date_of_birth','Date of birth','date',true)}{field('national_id','National ID')}{field('city','City')}{field('county','County')}{field('address','Address')}{form.errors.eligibility_answers&&<p className="text-sm text-red-600">{form.errors.eligibility_answers}</p>}<div className="md:col-span-2"><button disabled={form.processing} className="rounded-xl bg-emerald-700 px-6 py-3 font-bold text-white disabled:opacity-60">{form.processing?'Submitting…':'Submit application'}</button></div></form></div></div></main></>;
+}

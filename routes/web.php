@@ -6,6 +6,8 @@ use App\Http\Controllers\Admin\ExecutivePositionController;
 use App\Http\Controllers\Admin\ExecutiveAppointmentController;
 use App\Http\Controllers\Admin\SystemSettingController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\MembershipApplicationController;
+use App\Http\Controllers\Admin\MembershipApplicationController as AdminMembershipApplicationController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -19,6 +21,9 @@ Route::get('/contact', fn () => Inertia::render('Contact'))->name('contact');
 Route::get('/faq', fn () => Inertia::render('FAQ'))->name('faq');
 Route::get('/terms', fn () => Inertia::render('Terms'))->name('terms');
 Route::get('/privacy', fn () => Inertia::render('Privacy'))->name('privacy');
+
+Route::get('/membership/apply', [MembershipApplicationController::class, 'create'])->name('membership.application.create');
+Route::post('/membership/apply', [MembershipApplicationController::class, 'store'])->name('membership.application.store');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'create'])->name('login');
@@ -65,6 +70,16 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
         Route::post('/members', [MemberController::class, 'store'])->name('members.store');
         Route::put('/members/{member}', [MemberController::class, 'update'])->name('members.update');
         Route::delete('/members/{member}', [MemberController::class, 'destroy'])->name('members.destroy');
+    });
+
+    Route::prefix('membership-applications')->name('membership-applications.')->middleware('permission:members.view')->group(function () {
+        Route::get('/', [AdminMembershipApplicationController::class, 'index'])->name('index');
+        Route::get('/{application}', [AdminMembershipApplicationController::class, 'show'])->name('show');
+        Route::middleware('permission:members.manage')->group(function () {
+            Route::post('/{application}/review', [AdminMembershipApplicationController::class, 'review'])->name('review');
+            Route::post('/{application}/approve', [AdminMembershipApplicationController::class, 'approve'])->name('approve');
+            Route::post('/{application}/reject', [AdminMembershipApplicationController::class, 'reject'])->name('reject');
+        });
     });
 
     Route::prefix('governance')->name('governance.')->middleware('permission:governance.view')->group(function () {

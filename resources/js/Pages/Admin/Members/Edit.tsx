@@ -18,6 +18,7 @@ export default function Edit({ member }: { member: MemberFormData & { id: number
         county: member.county || '',
         joined_at: member.joined_at || '',
         status: member.status,
+        status_reason: '',
         notes: member.notes || '',
     });
 
