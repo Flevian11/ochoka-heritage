@@ -22,14 +22,35 @@ Route::get('/privacy', fn () => Inertia::render('Privacy'))->name('privacy');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'create'])->name('login');
-    Route::post('/login', [AuthController::class, 'store'])->name('login.store');
+    Route::post('/login', [AuthController::class, 'store'])->middleware('throttle:login')->name('login.store');
+
+    Route::get('/register', [AuthController::class, 'register'])->name('register');
+    Route::post('/register', [AuthController::class, 'storeRegistration'])->name('register.store');
+
+    Route::get('/forgot-password', [AuthController::class, 'forgotPassword'])->name('password.request');
+    Route::post('/forgot-password', [AuthController::class, 'sendPasswordResetLink'])->name('password.email');
+
+    Route::get('/reset-password/{token}', [AuthController::class, 'resetPassword'])->name('password.reset');
+    Route::post('/reset-password', [AuthController::class, 'updatePassword'])->name('password.update');
 });
+
+Route::get('/email/verify', [AuthController::class, 'verificationNotice'])
+    ->middleware('auth')
+    ->name('verification.notice');
+
+Route::get('/email/verify/{id}/{hash}', [AuthController::class, 'verifyEmail'])
+    ->middleware(['auth', 'signed', 'throttle:6,1'])
+    ->name('verification.verify');
+
+Route::post('/email/verification-notification', [AuthController::class, 'resendVerification'])
+    ->middleware(['auth', 'throttle:6,1'])
+    ->name('verification.send');
 
 Route::post('/logout', [AuthController::class, 'destroy'])
     ->middleware('auth')
     ->name('logout');
 
-Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', DashboardController::class)
         ->middleware('permission:members.view')
         ->name('dashboard');

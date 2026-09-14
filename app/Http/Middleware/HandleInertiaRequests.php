@@ -25,6 +25,8 @@ class HandleInertiaRequests extends Middleware
                     'id' => $user->id,
                     'name' => $user->name,
                     'email' => $user->email,
+                    'email_verified' => $user->hasVerifiedEmail(),
+                    'status' => $user->status,
                 ] : null,
             ],
             'flash' => [

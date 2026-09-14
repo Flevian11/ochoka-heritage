@@ -33,18 +33,25 @@ export default function Login() {
                                 onChange={(e) => form.setData('email', e.target.value)}
                                 className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-emerald-500"
                                 autoComplete="email"
+                                required
                             />
                             {form.errors.email && <p className="mt-1 text-sm text-red-600">{form.errors.email}</p>}
                         </div>
 
                         <div>
-                            <label className="block text-sm font-semibold text-slate-700">Password</label>
+                            <div className="flex items-center justify-between">
+                                <label className="block text-sm font-semibold text-slate-700">Password</label>
+                                <Link href="/forgot-password" className="text-sm font-semibold text-emerald-700 hover:text-emerald-800">
+                                    Forgot password?
+                                </Link>
+                            </div>
                             <input
                                 type="password"
                                 value={form.data.password}
                                 onChange={(e) => form.setData('password', e.target.value)}
                                 className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-emerald-500"
                                 autoComplete="current-password"
+                                required
                             />
                             {form.errors.password && <p className="mt-1 text-sm text-red-600">{form.errors.password}</p>}
                         </div>
@@ -61,6 +68,10 @@ export default function Login() {
                         >
                             {form.processing ? 'Signing in…' : 'Sign in'}
                         </button>
+
+                        <p className="text-center text-sm text-slate-500">
+                            Need an account? <Link href="/register" className="font-semibold text-emerald-700">Create one</Link>
+                        </p>
                     </form>
                 </div>
             </main>
